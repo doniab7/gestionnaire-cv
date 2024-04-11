@@ -1,15 +1,21 @@
 // src/services/cv.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Repository } from 'typeorm';
+import { Brackets, In, Repository } from 'typeorm';
 import { Cv } from '../entities/cv.entity';
 import { FilterDto } from '../dtos/filter.dto';
+import { User } from '../entities/user.entity';
+import { Skill } from '../entities/skill.entity';
 
 @Injectable()
 export class CvService {
   constructor(
     @InjectRepository(Cv)
     private cvRepository: Repository<Cv>,
+    @InjectRepository(User) // Inject User repository
+    private userRepository: Repository<User>,
+    @InjectRepository(Skill) // Inject Skill repository
+    private skillRepository: Repository<Skill>,
   ) {}
 
   async findAll(): Promise<Cv[]> {
@@ -17,7 +23,12 @@ export class CvService {
   }
 
   async findOne(id: number): Promise<Cv> {
-    return this.cvRepository.findOneBy({ id: id });
+    return this.cvRepository
+      .createQueryBuilder('cv')
+      .leftJoinAndSelect('cv.user', 'user')
+      .leftJoinAndSelect('cv.skills', 'skills')
+      .where('cv.id = :id', { id })
+      .getOne();
   }
 
   async findAllFiltered(filterDto: FilterDto): Promise<Cv[]> {
@@ -35,7 +46,29 @@ export class CvService {
       .getMany();
   }
 
-  async create(cv: Cv): Promise<Cv> {
+  async create(cv: Cv, userId: number, skillIds: number[]): Promise<Cv> {
+    // Find the user by userId
+    const user = await this.userRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const skills = await this.skillRepository.find({
+      where: { id: In(skillIds) },
+    });
+
+    if (skills.length !== skillIds.length) {
+      /*console.log(skills.length);
+      console.log(skills);
+      console.log(skillIds.length);*/
+      throw new Error('Some skills not found');
+    }
+
+    // Assign the user and skills to the cv
+    cv.user = user;
+    cv.skills = skills;
+
+    // Save the cv
     return this.cvRepository.save(cv);
   }
 

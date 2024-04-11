@@ -33,8 +33,12 @@ export class CvController {
   }
 
   @Post()
-  create(@Body() cv: Cv): Promise<Cv> {
-    return this.cvService.create(cv);
+  create(
+    @Body() cv: Cv,
+    @Body('userId') userId: number,
+    @Body('skillIds') skillIds: number[],
+  ): Promise<Cv> {
+    return this.cvService.create(cv, userId, skillIds);
   }
 
   @Put(':id')
