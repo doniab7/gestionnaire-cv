@@ -2,8 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.createApplicationContext(AppModule);
-  // Todo : Do What you want
-  await app.close();
+  const app = await NestFactory.create(AppModule);
+  await app.listen(3000);
 }
 bootstrap();

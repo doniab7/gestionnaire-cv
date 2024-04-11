@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Cv } from './entities/cv.entity'; // Updated import path
+import { Cv } from './entities/cv.entity';
+import { CvModule } from './modules/cv.module';
 
 @Module({
   imports: [
+    CvModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
