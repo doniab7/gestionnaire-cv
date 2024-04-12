@@ -10,7 +10,7 @@ export default class SkillSeeder implements Seeder {
   ): Promise<any> {
     try {
       const skillFactory = factoryManager.get(Skill);
-      const skills = await skillFactory.saveMany(20);
+      const skills = await skillFactory.saveMany(15);
 
       console.log('Added Skills:', skills);
     } catch (error) {

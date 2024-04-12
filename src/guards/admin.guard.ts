@@ -12,6 +12,6 @@ export class AdminGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user; // Assuming the user object contains role information
 
-    return user.isAdmin; // Example: Check if user has admin role
+    return user.role === 'admin'; // Check if user has admin role
   }
 }

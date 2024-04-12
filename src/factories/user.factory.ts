@@ -7,6 +7,8 @@ export const UserFactory = setSeederFactory(User, (faker: Faker) => {
   user.username = faker.internet.userName();
   user.email = faker.internet.email();
   user.password = faker.internet.password();
-  user.role = 'admin'; // suppose pre-generated users are admins
+  const words = ['admin', 'user'];
+  const randNum = faker.number.int({ min: 0, max: 1 });
+  user.role = words[randNum];
   return user;
 });

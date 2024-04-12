@@ -13,6 +13,7 @@ import { MulterConfigModule } from './modules/multer.module';
 import { CvController } from './controllers/cv.controller';
 import { CvService } from './services/cv.service';
 import { AuthModule } from './modules/auth.module';
+import { AdminGuard } from './guards/admin.guard';
 
 @Module({
   imports: [
@@ -35,10 +36,10 @@ import { AuthModule } from './modules/auth.module';
     TypeOrmModule.forFeature([Cv, User, Skill]),
   ],
   controllers: [AppController, CvController],
-  providers: [AppService, CvService],
+  providers: [AppService, CvService, AdminGuard],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('cv/v2'); // Remplacez 'second-cv' par le bon endpoint
+    consumer.apply(AuthMiddleware).forRoutes('cv/v2');
   }
 }
