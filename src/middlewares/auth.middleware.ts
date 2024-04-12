@@ -12,7 +12,10 @@ export class AuthMiddleware implements NestMiddleware {
 
     try {
       const decodedToken = jwt.verify(token.toString(), 'secret_key');
-      req['user'] = { userId: decodedToken['userId'] };
+      req['user'] = {
+        userId: decodedToken['userId'],
+        role: decodedToken['role'],
+      };
       next();
     } catch (error) {
       return res.status(401).json({ message: 'Unauthorized' });

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PassportModule } from '@nestjs/passport';
 import { Cv } from '../entities/cv.entity';
 import { User } from '../entities/user.entity';
 import { Skill } from '../entities/skill.entity';
@@ -12,6 +13,7 @@ import { SkillModule } from './skill.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Cv, User, Skill]),
+    PassportModule,
     UserModule,
     SkillModule,
   ],

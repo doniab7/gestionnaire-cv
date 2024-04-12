@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthMiddleware } from './middlewares/auth.middleware';
+import { PassportModule } from '@nestjs/passport';
 import { Cv } from './entities/cv.entity';
 import { User } from './entities/user.entity';
 import { Skill } from './entities/skill.entity';
@@ -17,6 +18,7 @@ import { AdminGuard } from './guards/admin.guard';
 
 @Module({
   imports: [
+    PassportModule,
     CvModule,
     UserModule,
     SkillModule,

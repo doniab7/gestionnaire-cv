@@ -6,32 +6,39 @@ import {
   Param,
   Put,
   Delete,
-  Query,
   UnauthorizedException,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { CvService } from '../services/cv.service';
 import { Cv } from '../entities/cv.entity';
-import { FilterDto } from '../dtos/filter.dto';
 import { Token } from '../decorators/token.decorator';
+import { AdminGuard } from '../guards/admin.guard';
 
 @Controller('cv/v2')
 export class CvControllerV2 {
   constructor(private readonly cvService: CvService) {}
 
   @Get()
-  findAll(): Promise<Cv[]> {
+  @UseGuards(AdminGuard)
+  async findAll(): Promise<Cv[]> {
     return this.cvService.findAll();
   }
 
   @Get('detail/:id')
-  findOne(@Param('id') id: string): Promise<Cv> {
-    return this.cvService.findOne(+id);
-  }
-
-  @Get('filter')
-  findAllFiltered(@Query() filterDto: FilterDto): Promise<Cv[]> {
-    return this.cvService.findAllFiltered(filterDto);
+  async findOne(@Param('id') id: string, @Token() token): Promise<Cv> {
+    const cv = await this.cvService.findOne(+id);
+    if (!cv) {
+      throw new NotFoundException('CV not found');
+    }
+    // Check if the user is an admin or the owner of the CV
+    if (token.role === 'admin' || token.userId === cv.user.id) {
+      return cv;
+    } else {
+      throw new UnauthorizedException(
+        'Unauthorized: User does not have permission to access this CV',
+      );
+    }
   }
 
   @Post()
