@@ -9,6 +9,6 @@ export const CvFactory = setSeederFactory(Cv, (faker: Faker) => {
   cv.age = faker.number.int({ min: 18, max: 65 });
   cv.Cin = faker.string.numeric(8);
   cv.Job = faker.person.jobTitle();
-  cv.path = `../assets/cv_${faker.number.int()}.pdf`;
+  cv.path = ``; //`../assets/cv_${faker.number.int()}.pdf`
   return cv;
 });

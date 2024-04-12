@@ -1,5 +1,5 @@
 // src/services/cv.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, In, Repository } from 'typeorm';
 import { Cv } from '../entities/cv.entity';
@@ -46,6 +46,15 @@ export class CvService {
       .getMany();
   }
 
+  async findAllPaginated(page: number, pageSize: number): Promise<Cv[]> {
+    const skip = (page - 1) * pageSize;
+    const take = pageSize;
+    return this.cvRepository.find({
+      skip,
+      take,
+    });
+  }
+
   async create(cv: Cv, userId: number, skillIds: number[]): Promise<Cv> {
     // Find the user by userId
     const user = await this.userRepository.findOneBy({ id: userId });
@@ -79,5 +88,19 @@ export class CvService {
 
   async remove(id: number): Promise<void> {
     await this.cvRepository.delete(id);
+  }
+
+  async findOneByIdAndSelect(id: number): Promise<Cv> {
+    const cv = await this.cvRepository
+      .createQueryBuilder('cv')
+      .select(['cv.id', 'cv.path'])
+      .where('cv.id = :id', { id })
+      .getOne();
+
+    if (!cv) {
+      throw new NotFoundException('CV not found');
+    }
+
+    return cv;
   }
 }

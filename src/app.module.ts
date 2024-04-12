@@ -9,12 +9,16 @@ import { Skill } from './entities/skill.entity';
 import { CvModule } from './modules/cv.module';
 import { UserModule } from './modules/user.module';
 import { SkillModule } from './modules/skill.module';
+import { MulterConfigModule } from './modules/multer.module';
+import { CvController } from './controllers/cv.controller';
+import { CvService } from './services/cv.service';
 
 @Module({
   imports: [
     CvModule,
     UserModule,
     SkillModule,
+    MulterConfigModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -28,8 +32,8 @@ import { SkillModule } from './modules/skill.module';
     }),
     TypeOrmModule.forFeature([Cv, User, Skill]),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, CvController],
+  providers: [AppService, CvService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
