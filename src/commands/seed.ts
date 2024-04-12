@@ -2,8 +2,13 @@ import 'reflect-metadata';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { runSeeders, SeederOptions } from 'typeorm-extension';
 import { Cv } from '../entities/cv.entity';
+import { Skill } from '../entities/skill.entity';
+import { User } from '../entities/user.entity';
 import { CvFactory } from '../factories/cv.factory';
+import { SkillFactory } from '../factories/skill.factory';
+import { UserFactory } from '../factories/user.factory';
 import CvSeeder from './cv.seeder';
+import SkillSeeder from './skill.seeder';
 
 const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
@@ -14,10 +19,10 @@ const options: DataSourceOptions & SeederOptions = {
   username: DB_USER || 'root',
   password: DB_PASSWORD || 'sql123',
   database: DB_NAME || 'test',
-  entities: [Cv],
+  entities: [Cv, Skill, User],
   // additional config options brought by typeorm-extension
-  factories: [CvFactory],
-  seeds: [CvSeeder],
+  factories: [SkillFactory, CvFactory, UserFactory],
+  seeds: [SkillSeeder, CvSeeder],
 };
 
 const dataSource = new DataSource(options);
