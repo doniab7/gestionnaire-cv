@@ -12,6 +12,7 @@ import { SkillModule } from './modules/skill.module';
 import { MulterConfigModule } from './modules/multer.module';
 import { CvController } from './controllers/cv.controller';
 import { CvService } from './services/cv.service';
+import { AuthModule } from './modules/auth.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CvService } from './services/cv.service';
     UserModule,
     SkillModule,
     MulterConfigModule,
+    AuthModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
