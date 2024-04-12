@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthMiddleware } from './middlewares/auth.middleware';
 import { Cv } from './entities/cv.entity';
 import { User } from './entities/user.entity';
 import { Skill } from './entities/skill.entity';
@@ -30,4 +31,8 @@ import { SkillModule } from './modules/skill.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).forRoutes('cv/v2'); // Remplacez 'second-cv' par le bon endpoint
+  }
+}
