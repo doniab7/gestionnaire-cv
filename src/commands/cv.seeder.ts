@@ -2,7 +2,6 @@ import { DataSource, In } from 'typeorm';
 import { Seeder, SeederFactoryManager } from 'typeorm-extension';
 import { Cv } from '../entities/cv.entity';
 import { Skill } from '../entities/skill.entity';
-import { User } from '../entities/user.entity';
 
 export default class CvSeeder implements Seeder {
   public async run(
@@ -12,12 +11,10 @@ export default class CvSeeder implements Seeder {
     try {
       const cvFactory = factoryManager.get(Cv);
       const skillRepository = dataSource.getRepository(Skill);
-      const userFactory = factoryManager.get(User);
       const cvs = await cvFactory.saveMany(10);
 
       await Promise.all(
         cvs.map(async (cv) => {
-          const user = await userFactory.save();
           const numberOfSkillsToAdd = Math.floor(Math.random() * 5) + 1; // Generate a random number between 1 and 5 for the number of skills to add
           const randomSkillIds = Array.from(
             { length: numberOfSkillsToAdd },
@@ -27,7 +24,6 @@ export default class CvSeeder implements Seeder {
             where: { id: In(randomSkillIds) },
           }); // Find skills based on the random skill IDs
           cv.skills = skills; // Assign the random skills to the CV
-          cv.user = user; // Assign the user to the CV
           await dataSource.manager.save(cv); // Save the CV
         }),
       );

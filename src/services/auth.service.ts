@@ -19,11 +19,13 @@ export class AuthService {
 
   async signup(signupDto: SignupDto): Promise<User> {
     const { username, email, password } = signupDto;
-    return this.userRepository.create({
+    const user = this.userRepository.create({
       username,
       email,
       password,
+      role: 'user',
     });
+    return await this.userRepository.save(user);
   }
 
   async login(loginDto: LoginDto): Promise<{ accessToken: string }> {

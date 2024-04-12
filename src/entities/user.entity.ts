@@ -16,6 +16,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ default: 'user' }) // Default role is 'user'
+  role: string;
+
   @OneToMany(() => Cv, (cv) => cv.user)
   cvs: Cv[];
 }

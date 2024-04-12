@@ -9,6 +9,7 @@ import { SkillFactory } from '../factories/skill.factory';
 import { UserFactory } from '../factories/user.factory';
 import CvSeeder from './cv.seeder';
 import SkillSeeder from './skill.seeder';
+import UserSeeder from './user.seeder';
 
 const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
@@ -22,7 +23,7 @@ const options: DataSourceOptions & SeederOptions = {
   entities: [Cv, Skill, User],
   // additional config options brought by typeorm-extension
   factories: [SkillFactory, CvFactory, UserFactory],
-  seeds: [SkillSeeder, CvSeeder],
+  seeds: [SkillSeeder, CvSeeder, UserSeeder],
 };
 
 const dataSource = new DataSource(options);
